@@ -1,5 +1,5 @@
 (function($) {
-  var updateFrequency=2000, interval, url = 'http://localhost:3000/api/v1/prescount';
+  var updateFrequency=2000, interval, url = 'https://autolotto-backend-production.herokuapp.com/api/v1/pres/count';
 
   function getPresCount() {
     var deferred = $.Deferred();
