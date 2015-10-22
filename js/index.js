@@ -1,5 +1,11 @@
 (function($) {
-  var updateFrequency=2000, interval, url = 'https://autolotto-backend-staging.herokuapp.com/api/v1/pres/count';
+  var updateFrequency=2000, interval, url = 'https://autolotto-backend-staging.herokuapp.com/api/v1/pres/count', inProgress = false;
+
+  Number.prototype.addCommas = function() {
+    var parts = this.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  };
 
   function getPresCount() {
     var deferred = $.Deferred();
@@ -14,10 +20,14 @@
   }
 
   function updateCounter() {
+    if (inProgress) return false;
+    inProgress = true;
     getPresCount().then(function(resp) {
-      $('#counter').html(resp);
+      $('#counter').html(resp.addCommas());
+      inProgress = false;
     }, console.log);
   }
 
+  updateCounter();
   interval = setInterval(updateCounter, updateFrequency);
 }) (jQuery);
