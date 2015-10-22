@@ -15,7 +15,7 @@
 
   function updateCounter() {
     getPresCount().then(function(resp) {
-      $('#counter').html(resp);
+      $('#counter').text(resp);
     }, console.log);
   }
 
