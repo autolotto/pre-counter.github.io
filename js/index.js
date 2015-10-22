@@ -1,35 +1,26 @@
 (function($){
-  var ns, updateFrequency=2000, interval, hostName = 'http://localhost:3000/';
+  var updateFrequency=2000, interval, url = 'http://localhost:3000/api/v1/prescount';
 
-  ns = {
-    services: {
-      presCount: hostName + 'api/v1/prescount'
-    },
-    utils: {
-      getPresCount: function(){
-        var deferred = $.Deferred();
-        $.ajax({
-          url: ns.services.presCount,
-          type:"get",
-          dataType: 'json',
-          success: function (resp, status) {
-            if(status === 'success' && resp.success){
-              deferred.resolve(resp.data.count || 0);
-            }else{
-              deferred.reject( resp );
-            }
-          },
-          error : deferred.reject
-        });
-        return deferred.promise();
+  function getPresCount(){
+    var deferred = $.Deferred();
+
+    function success(resp, status){
+      if(status === 'success' && resp.success){
+        deferred.resolve(resp.data.count || 0);
+      }else{
+        deferred.reject( resp );
       }
-    },
-    updateCounter: function(){
-      ns.utils.getPresCount().then( function(resp){
-        $('#counter').html(resp);
-      }, console.log );
     }
-  };
 
-  interval = setInterval(ns.updateCounter, updateFrequency);
+    $.ajax({ url: url, type:"get", dataType: 'json', success: success, error : deferred.reject });
+    return deferred.promise();
+  }
+
+  function updateCounter(){
+    getPresCount().then( function(resp){
+      $('#counter').html(resp);
+    }, console.log );
+  }
+
+  interval = setInterval(updateCounter, updateFrequency);
 })(jQuery);
