@@ -7,16 +7,16 @@
       if (status === 'success' && resp.success) {
         deferred.resolve(resp.data.count || 0);
       } else {
-        deferred.reject( resp );
+        deferred.reject(resp);
       }
-    } });
+    }});
     return deferred.promise();
   }
 
   function updateCounter() {
-    getPresCount().then( function(resp) {
+    getPresCount().then(function(resp) {
       $('#counter').html(resp);
-    }, console.log );
+    }, console.log);
   }
 
   interval = setInterval(updateCounter, updateFrequency);
