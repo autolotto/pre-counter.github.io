@@ -1,13 +1,35 @@
-(function(){
-  function includeJquery(){
-    var jqScript = document.createElement('script');
-    jqScript.setAttribute('src','//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js');
-    document.head.appendChild(jqScript);
-  }
+(function($){
+  var ns, updateFrequency=2000, interval, hostName = '';
 
-  if (typeof window.parent.getJquery === 'function'){
-    var $ = window.parent.getJquery();
-  }else{
-    includeJquery();
-  }
-})();
+  ns = {
+    services: {
+      presCount: hostName + '/api/v1/prescount'
+    },
+    utils: {
+      getPresCount: function(){
+        var deferred = $.Deferred();
+        $.ajax({
+          url: this.services.presCount,
+          type:"get",
+          dataType: 'json',
+          success: function (resp, status) {
+            if(status === 'success'){
+              deferred.resolve(resp );
+            }else{
+              deferred.reject( resp );
+            }
+          },
+          error : deferred.reject
+        });
+        return deferred.promise();
+      }
+    },
+    updateCounter: function(){
+      this.utils.getPresCount().then( function(resp){
+        $('#counter').html(resp);
+      }, console.log );
+    }
+  };
+
+  interval = setInterval($.proxy( ns.updateCounter, ns), updateFrequency);
+})(jQuery);
