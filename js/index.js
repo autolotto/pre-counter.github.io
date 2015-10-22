@@ -1,5 +1,5 @@
 (function($) {
-  var updateFrequency=2000, interval, url = 'https://autolotto-backend-staging.herokuapp.com/api/v1/pres/count', inProgress = false;
+  var updateFrequency=2000, interval, url = 'https://autolotto-backend-production.herokuapp.com/api/v1/pres/count', inProgress = false;
 
   Number.prototype.addCommas = function() {
     var parts = this.toString().split(".");
@@ -23,7 +23,7 @@
     if (inProgress) return false;
     inProgress = true;
     getPresCount().then(function(resp) {
-      $('#counter').html(resp.addCommas());
+      $('#counter').text(resp.addCommas());
       inProgress = false;
     }, console.log);
   }
