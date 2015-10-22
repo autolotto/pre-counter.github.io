@@ -3,16 +3,13 @@
 
   function getPresCount(){
     var deferred = $.Deferred();
-
-    function success(resp, status){
+    $.ajax({ url: url, type:"get", dataType: 'json', error : deferred.reject, success: function(resp, status){
       if(status === 'success' && resp.success){
         deferred.resolve(resp.data.count || 0);
       }else{
         deferred.reject( resp );
       }
-    }
-
-    $.ajax({ url: url, type:"get", dataType: 'json', success: success, error : deferred.reject });
+    }});
     return deferred.promise();
   }
 
